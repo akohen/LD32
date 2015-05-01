@@ -7,6 +7,8 @@ var arrows;
 var player;
 var apparitionTime;
 var speed = -100;
+var apparitionTimeLow = 10;
+var apparitionTimeHigh = 150;
 
 function preload () {
   game.load.image('arrow', 'assets/arrow_up.png');
@@ -41,7 +43,7 @@ function update() {
 
   if (apparitionTime == 0) {
   	arrows.create(750, 300, 'arrow').body.velocity.x = speed;
-  	apparitionTime = 100;
+  	apparitionTime = Math.floor(apparitionTimeLow + Math.random()*(apparitionTimeHigh - apparitionTimeLow));
   }
   
   apparitionTime-- ;
