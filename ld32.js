@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update });
 
 var cursors;
 var key;
@@ -12,6 +12,7 @@ var apparitionTimeHigh = 150;
 
 var arrowType;
 var arrowChoise;
+
 
 function preload () {
   game.load.image('arrow', 'assets/arrow_up2.png');
@@ -31,8 +32,6 @@ function create () {
   arrows.enableBody = true;
   arrows.physicsBodyType = Phaser.Physics.ARCADE;
 
-  arrows.setAll('body.velocity.x', speed);
-
   player = game.add.sprite(100,250, 'curseur');
   game.physics.enable(player, Phaser.Physics.ARCADE);
 
@@ -43,50 +42,49 @@ function create () {
 
 function update() {
   updateCursor();
+  spawnArrow();
   
   game.physics.arcade.overlap(player, arrows, collisionHandler, null, this);
+}
 
+
+function spawnArrow() {
   if (apparitionTime == 0) {
-  	arrowChoise = Math.floor( Math.random()*3.999);
-  	if (arrowChoise == 0){
-  		arrowType = 'arrowUp';
-  	} else if (arrowChoise == 1 ) {
-  		arrowType = 'arrowDown';
-  	} else if (arrowChoise == 2 ){
-  		arrowType = 'arrowRight';
-  	} else if (arrowChoise == 3 ){
-  		arrowType = 'arrowLeft';
-  	} else {
-  		arrowType = 'arrow';
-  	}
+    arrowChoise = Math.floor( Math.random()*3.999);
+    if (arrowChoise == 0){
+      arrowType = 'arrowUp';
+    } else if (arrowChoise == 1 ) {
+      arrowType = 'arrowDown';
+    } else if (arrowChoise == 2 ){
+      arrowType = 'arrowRight';
+    } else if (arrowChoise == 3 ){
+      arrowType = 'arrowLeft';
+    } else {
+      arrowType = 'arrow';
+    }
 
     var arrow = arrows.create(750, 300, arrowType);
     arrow.body.velocity.x = speed;
     arrow.events.onOutOfBounds.add(goodbye, this);
     arrow.checkWorldBounds = true;
-  	apparitionTime = Math.floor(apparitionTimeLow + Math.random()*(apparitionTimeHigh - apparitionTimeLow));
+    apparitionTime = Math.floor(apparitionTimeLow + Math.random()*(apparitionTimeHigh - apparitionTimeLow));
   }
   
   apparitionTime-- ;
-
 }
 
-
-function render() {
-  game.debug.text(game.time.fps || '--', 2, 14, "#00ff00"); 
-}
 
 function updateCursor() {
   key = '';
   if( cooldown == 0 ) {
     if (cursors.up.isDown) {
-      key = 'up';
+      key = 'Up';
     } else if (cursors.down.isDown) {
-      key = 'down';
+      key = 'Down';
     } else if (cursors.left.isDown) {
-      key = 'left';
+      key = 'Left';
     } else if (cursors.right.isDown) {
-      key = 'right';
+      key = 'Right';
     }
     if( key != '' ) {
       console.log(key);
@@ -97,9 +95,19 @@ function updateCursor() {
   }
 }
 
+
 function collisionHandler(player, arrow) {
+  if( key != '' ) {
+    if( 'arrow'+key == arrow.key) {
+      arrow.kill();
+      console.log('OK!');
+    } else {
+      console.log('NON');
+    }
+  }
 
 }
+
 
 function goodbye(obj) {
    obj.kill();
