@@ -10,6 +10,7 @@ var speed = -300;
 var apparitionTimeLow = 10;
 var apparitionTimeHigh = 150;
 var score;
+var scoreText;
 
 var arrowType;
 var arrowChoice;
