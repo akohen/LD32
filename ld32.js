@@ -22,7 +22,7 @@ function preload () {
   game.load.image('arrowDown', 'assets/arrow_down2.png');
   game.load.image('arrowRight', 'assets/arrow_right2.png');
   game.load.image('arrowLeft', 'assets/arrow_left2.png');
-  game.load.image('curseur', 'assets/arrow_up.png');
+  game.load.image('curseur', 'assets/curseur.png');
 }
 
 
