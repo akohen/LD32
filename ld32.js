@@ -1,5 +1,8 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
+var cursors;
+var key;
+var cooldown;
 var arrows;
 var player;
 
@@ -23,11 +26,28 @@ function create () {
 
   player = game.add.sprite(100,250, 'arrowDown');
   game.physics.enable(player, Phaser.Physics.ARCADE);
+
+  cursors = game.input.keyboard.createCursorKeys();
 }
 
 
 function update() {
+  
   game.physics.arcade.overlap(player, arrows, collisionHandler, null, this);
+}
+
+
+function updateCursor() {
+  if (cursors.up.isDown) {
+    console.log('up');
+  } else if (cursors.down.isDown) {
+    console.log('down');
+  } else if (cursors.left.isDown) {
+    console.log('left');
+  } else if (cursors.right.isDown) {
+    console.log('right');
+  }
+
 }
 
 function collisionHandler() {
