@@ -25,8 +25,8 @@ var gameState = {
   //player,
   apparitionTime : 10,
   speed : -300,
-  apparitionTimeLow : 11,//-10*350/this.speed,
-  apparitionTimeHigh : 40,//3.5*this.apparitionTimeLow,
+  apparitionTimeLow : 25,//-10*350/this.speed,
+  apparitionTimeHigh : 100,//3.5*this.apparitionTimeLow,
   score : 0,
   //scoreText,
   //arrowType,
@@ -66,7 +66,7 @@ var gameState = {
     this.updateCursor();
     this.spawnArrow();
     
-    game.physics.arcade.overlap(player, this.arrows, this.collisionHandler);
+    game.physics.arcade.overlap(player, this.arrows, this.collisionHandler, null, this);
   },
 
 
