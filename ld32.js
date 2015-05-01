@@ -32,6 +32,7 @@ function create () {
 
 
 function update() {
+  updateCursor();
   
   game.physics.arcade.overlap(player, arrows, collisionHandler, null, this);
 }
