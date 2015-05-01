@@ -14,11 +14,11 @@ var arrowType;
 var arrowChoise;
 
 function preload () {
-  game.load.image('arrow', 'assets/arrow_up.png');
-  game.load.image('arrowUp', 'assets/arrow_up.png');
-  game.load.image('arrowDown', 'assets/arrow_down.png');
-  game.load.image('arrowRight', 'assets/arrow_right.png');
-  game.load.image('arrowLeft', 'assets/arrow_left.png');
+  game.load.image('arrow', 'assets/arrow_up2.png');
+  game.load.image('arrowUp', 'assets/arrow_up2.png');
+  game.load.image('arrowDown', 'assets/arrow_down2.png');
+  game.load.image('arrowRight', 'assets/arrow_right2.png');
+  game.load.image('arrowLeft', 'assets/arrow_left2.png');
   game.load.image('curseur', 'assets/arrow_up.png');
 }
 
