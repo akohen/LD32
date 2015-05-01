@@ -19,6 +19,7 @@ function preload () {
   game.load.image('arrowDown', 'assets/arrow_down.png');
   game.load.image('arrowRight', 'assets/arrow_right.png');
   game.load.image('arrowLeft', 'assets/arrow_left.png');
+  game.load.image('curseur', 'assets/arrow_up.png');
 }
 
 
@@ -32,7 +33,7 @@ function create () {
 
   arrows.setAll('body.velocity.x', speed);
 
-  player = game.add.sprite(100,250, 'arrowDown');
+  player = game.add.sprite(100,250, 'curseur');
   game.physics.enable(player, Phaser.Physics.ARCADE);
 
   cursors = game.input.keyboard.createCursorKeys();
