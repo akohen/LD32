@@ -94,7 +94,7 @@ function updateCursor() {
     }
     if( key != '' ) {
       console.log(key);
-      cooldown = 15;
+      cooldown = 10;
     }
   } else {
     cooldown--;
