@@ -1,3 +1,23 @@
+var menuState = {
+  preload: function () {
+    game.load.image('arrow', 'assets/arrow_up2.png');
+  },
+
+
+  create: function () {
+    game.add.sprite(100,275, 'arrow');
+    this.cursors = game.input.keyboard.createCursorKeys();
+  },
+
+
+  update: function() {
+    if (this.cursors.up.isDown) {
+        game.state.start('game');
+      } 
+  },
+
+}
+
 var gameState = {
   //key,
   cooldown : 0,
@@ -46,7 +66,7 @@ var gameState = {
     this.updateCursor();
     this.spawnArrow();
     
-    game.physics.arcade.overlap(player, this.arrows, this.collisionHandler, null, this);
+    game.physics.arcade.overlap(player, this.arrows, this.collisionHandler);
   },
 
 
@@ -117,4 +137,5 @@ var gameState = {
 
 
 var game = new Phaser.Game(800, 600);
-game.state.add('menu', gameState, true);
+game.state.add('game', gameState);
+game.state.add('menu', menuState, true);
