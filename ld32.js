@@ -5,8 +5,8 @@ var gameState = {
   //player,
   apparitionTime : 10,
   speed : -300,
-  apparitionTimeLow : -10*350/speed,
-  apparitionTimeHigh : 3.5*apparitionTimeLow,
+  apparitionTimeLow : 11,//-10*350/this.speed,
+  apparitionTimeHigh : 40,//3.5*this.apparitionTimeLow,
   score : 0,
   //scoreText,
   //arrowType,
@@ -33,7 +33,7 @@ var gameState = {
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.anchor.x = 0.5;
     player.anchor.y = 0.5;
-    player.body.width=1;
+    player.body.width = 1;
     player.body.height = 60;
 
     scoreText = game.add.text(10, 10, 'Score : ' + this.score,  { font: "32px Arial", fill: '#ffffff'});
