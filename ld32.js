@@ -5,8 +5,8 @@ var gameState = {
   //player,
   apparitionTime : 10,
   speed : -300,
-  apparitionTimeLow : 10,
-  apparitionTimeHigh : 150,
+  apparitionTimeLow : -10*350/speed,
+  apparitionTimeHigh : 3.5*apparitionTimeLow,
   score : 0,
   //scoreText,
   //arrowType,
@@ -90,7 +90,7 @@ var gameState = {
       }
       if( key != '' ) {
         console.log(key);
-        this.cooldown = 15;
+        this.cooldown = 10;
       }
     } else {
       this.cooldown--;
