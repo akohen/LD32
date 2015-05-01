@@ -44,6 +44,8 @@ function update() {
   
   apparitionTime-- ;
 
+  arrows.events.onOutOfBounds.add( goodbye, this );
+
 }
 
 function updateCursor() {
@@ -70,4 +72,8 @@ function updateCursor() {
 
 function collisionHandler(player, arrow) {
   console.log('test');
+}
+
+function goodbye(obj) {
+   obj.kill();
 }
