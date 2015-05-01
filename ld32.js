@@ -77,13 +77,13 @@ function updateCursor() {
   key = '';
   if( cooldown == 0 ) {
     if (cursors.up.isDown) {
-      key = 'up';
+      key = 'Up';
     } else if (cursors.down.isDown) {
-      key = 'down';
+      key = 'Down';
     } else if (cursors.left.isDown) {
-      key = 'left';
+      key = 'Left';
     } else if (cursors.right.isDown) {
-      key = 'right';
+      key = 'Right';
     }
     if( key != '' ) {
       console.log(key);
@@ -96,6 +96,14 @@ function updateCursor() {
 
 
 function collisionHandler(player, arrow) {
+  if( key != '' ) {
+    if( 'arrow'+key == arrow.key) {
+      arrow.kill();
+      console.log('OK!');
+    } else {
+      console.log('NON');
+    }
+  }
 
 }
 
