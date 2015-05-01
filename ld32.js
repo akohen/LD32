@@ -7,8 +7,9 @@ var arrows;
 var player;
 var apparitionTime = 10;
 var speed = -300;
-var apparitionTimeLow = 10;
-var apparitionTimeHigh = 150;
+var spriteWidth = 60;
+var apparitionTimeLow = -10 * 350 /speed ;
+var apparitionTimeHigh = 3.5*apparitionTimeLow; //150;
 var score = 0;
 var scoreText;
 
