@@ -10,9 +10,15 @@ var speed = -100;
 var apparitionTimeLow = 10;
 var apparitionTimeHigh = 150;
 
+var arrowType;
+var arrowChoise;
+
 function preload () {
   game.load.image('arrow', 'assets/arrow_up.png');
+  game.load.image('arrowUp', 'assets/arrow_up.png');
   game.load.image('arrowDown', 'assets/arrow_down.png');
+  game.load.image('arrowRight', 'assets/arrow_right.png');
+  game.load.image('arrowLeft', 'assets/arrow_left.png');
 }
 
 
@@ -38,13 +44,28 @@ function update() {
   game.physics.arcade.overlap(player, arrows, collisionHandler, null, this);
 
   if (apparitionTime == 0) {
-  	arrows.create(750, 300, 'arrow').body.velocity.x = speed;
+
+  	arrowChoise = Math.floor( Math.random()*3.999);
+  	if (arrowChoise == 0){
+  		arrowType = 'arrowUp';
+  	} else if (arrowChoise == 1 ) {
+  		arrowType = 'arrowDown';
+  	} else if (arrowChoise == 2 ){
+  		arrowType = 'arrowRight';
+  	} else if (arrowChoise == 3 ){
+  		arrowType = 'arrowLeft';
+  	} else {
+  		arrowType = 'arrow';
+  	}
+  	
+
+  	arrows.create(750, 300, arrowType).body.velocity.x = speed;
   	apparitionTime = Math.floor(apparitionTimeLow + Math.random()*(apparitionTimeHigh - apparitionTimeLow));
   }
   
   apparitionTime-- ;
 
-  arrows.events.onOutOfBounds.add( goodbye, this );
+  //arrows.events.onOutOfBounds.add( goodbye, this );
 
 }
 
