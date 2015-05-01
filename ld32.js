@@ -5,6 +5,8 @@ var key;
 var cooldown;
 var arrows;
 var player;
+var apparitionTime;
+var speed = -100;
 
 function preload () {
   game.load.image('arrow', 'assets/arrow_up.png');
@@ -22,12 +24,13 @@ function create () {
   arrows.create(500, 300, 'arrow');
   arrows.create(600, 300, 'arrow');
 
-  arrows.setAll('body.velocity.x', -100);
+  arrows.setAll('body.velocity.x', speed);
 
   player = game.add.sprite(100,250, 'arrowDown');
   game.physics.enable(player, Phaser.Physics.ARCADE);
 
   cursors = game.input.keyboard.createCursorKeys();
+  apparitionTime = 10;
 }
 
 
@@ -35,8 +38,15 @@ function update() {
   updateCursor();
   
   game.physics.arcade.overlap(player, arrows, collisionHandler, null, this);
-}
 
+  if (apparitionTime == 0) {
+  	arrows.create(750, 300, 'arrow').body.velocity.x = speed;
+  	apparitionTime = 100;
+  }
+  
+  apparitionTime-- ;
+
+}
 
 function updateCursor() {
   if (cursors.up.isDown) {
@@ -51,6 +61,6 @@ function updateCursor() {
 
 }
 
-function collisionHandler() {
+function collisionHandler(player, arrow) {
   console.log('test');
 }
