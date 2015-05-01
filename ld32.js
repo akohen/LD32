@@ -32,8 +32,12 @@ function create () {
   arrows.enableBody = true;
   arrows.physicsBodyType = Phaser.Physics.ARCADE;
 
-  player = game.add.sprite(100,250, 'curseur');
+  player = game.add.sprite(100,275, 'curseur');
   game.physics.enable(player, Phaser.Physics.ARCADE);
+  player.anchor.x = 0.5;
+  player.anchor.y = 0.5;
+  player.body.width=1;
+  player.body.height = 60;
 
   scoreText = game.add.text(10, 10, 'Score : ' + score,  { font: "32px Arial", fill: '#ffffff'});
 
