@@ -2,7 +2,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 var cursors;
 var key;
-var cooldown;
+var cooldown = 0;
 var arrows;
 var player;
 var apparitionTime;
@@ -21,10 +21,6 @@ function create () {
   arrows.physicsEnabled = true
   arrows.enableBody = true;
   arrows.physicsBodyType = Phaser.Physics.ARCADE;
-
-  arrows.create(400, 300, 'arrow');
-  arrows.create(500, 300, 'arrow');
-  arrows.create(600, 300, 'arrow');
 
   arrows.setAll('body.velocity.x', speed);
 
@@ -51,16 +47,25 @@ function update() {
 }
 
 function updateCursor() {
-  if (cursors.up.isDown) {
-    console.log('up');
-  } else if (cursors.down.isDown) {
-    console.log('down');
-  } else if (cursors.left.isDown) {
-    console.log('left');
-  } else if (cursors.right.isDown) {
-    console.log('right');
+  key = '';
+  if( cooldown == 0 ) {
+    if (cursors.up.isDown) {
+      key = 'up';
+    } else if (cursors.down.isDown) {
+      key = 'down';
+    } else if (cursors.left.isDown) {
+      key = 'left';
+    } else if (cursors.right.isDown) {
+      key = 'right';
+    }
+    if( key != '' ) {
+      console.log(key);
+      cooldown = 15;
+    }
+  } else {
+    cooldown--;
   }
-
+  
 }
 
 function collisionHandler(player, arrow) {
