@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 var cursors;
 var key;
@@ -6,7 +6,7 @@ var cooldown = 0;
 var arrows;
 var player;
 var apparitionTime;
-var speed = -100;
+var speed = -300;
 var apparitionTimeLow = 10;
 var apparitionTimeHigh = 150;
 
@@ -17,6 +17,8 @@ function preload () {
 
 
 function create () {
+  game.time.advancedTiming = true;
+
   arrows = game.add.group();
   arrows.physicsEnabled = true
   arrows.enableBody = true;
@@ -38,14 +40,19 @@ function update() {
   game.physics.arcade.overlap(player, arrows, collisionHandler, null, this);
 
   if (apparitionTime == 0) {
-  	arrows.create(750, 300, 'arrow').body.velocity.x = speed;
+  	var arrow = arrows.create(750, 300, 'arrow');
+    arrow.body.velocity.x = speed;
+    arrow.events.onOutOfBounds.add(goodbye, this);
+    arrow.checkWorldBounds = true;
   	apparitionTime = Math.floor(apparitionTimeLow + Math.random()*(apparitionTimeHigh - apparitionTimeLow));
   }
   
   apparitionTime-- ;
 
-  arrows.events.onOutOfBounds.add( goodbye, this );
+}
 
+function render() {
+  game.debug.text(game.time.fps || '--', 2, 14, "#00ff00"); 
 }
 
 function updateCursor() {
@@ -72,6 +79,7 @@ function updateCursor() {
 function collisionHandler(player, arrow) {
 
 }
+
 function goodbye(obj) {
    obj.kill();
 }
