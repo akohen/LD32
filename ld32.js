@@ -5,11 +5,11 @@ var key;
 var cooldown = 0;
 var arrows;
 var player;
-var apparitionTime;
+var apparitionTime = 10;
 var speed = -300;
 var apparitionTimeLow = 10;
 var apparitionTimeHigh = 150;
-var score;
+var score = 0;
 var scoreText;
 
 var arrowType;
@@ -27,8 +27,6 @@ function preload () {
 
 
 function create () {
-  game.time.advancedTiming = true;
-
   arrows = game.add.group();
   arrows.physicsEnabled = true
   arrows.enableBody = true;
@@ -37,8 +35,9 @@ function create () {
   player = game.add.sprite(100,250, 'curseur');
   game.physics.enable(player, Phaser.Physics.ARCADE);
 
+  scoreText = game.add.text(10, 10, 'Score : ' + score,  { font: "32px Arial", fill: '#ffffff'});
+
   cursors = game.input.keyboard.createCursorKeys();
-  apparitionTime = 10;
 }
 
 
@@ -102,9 +101,8 @@ function collisionHandler(player, arrow) {
   if( key != '' ) {
     if( 'arrow'+key == arrow.key) {
       arrow.kill();
-      console.log('OK!');
-    } else {
-      console.log('NON');
+      score += 1;
+      scoreText.text = "Score : " + score;
     }
   }
 
