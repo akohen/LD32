@@ -9,9 +9,10 @@ var apparitionTime;
 var speed = -300;
 var apparitionTimeLow = 10;
 var apparitionTimeHigh = 150;
+var score;
 
 var arrowType;
-var arrowChoise;
+var arrowChoice;
 
 
 function preload () {
@@ -50,14 +51,14 @@ function update() {
 
 function spawnArrow() {
   if (apparitionTime == 0) {
-    arrowChoise = Math.floor( Math.random()*3.999);
-    if (arrowChoise == 0){
+    arrowChoice = Math.floor( Math.random()*3.999);
+    if (arrowChoice == 0){
       arrowType = 'arrowUp';
-    } else if (arrowChoise == 1 ) {
+    } else if (arrowChoice == 1 ) {
       arrowType = 'arrowDown';
-    } else if (arrowChoise == 2 ){
+    } else if (arrowChoice == 2 ){
       arrowType = 'arrowRight';
-    } else if (arrowChoise == 3 ){
+    } else if (arrowChoice == 3 ){
       arrowType = 'arrowLeft';
     } else {
       arrowType = 'arrow';
