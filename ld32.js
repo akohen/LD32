@@ -67,13 +67,11 @@ function updateCursor() {
   } else {
     cooldown--;
   }
-  
 }
 
 function collisionHandler(player, arrow) {
-  console.log('test');
-}
 
+}
 function goodbye(obj) {
    obj.kill();
 }
