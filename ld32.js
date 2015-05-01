@@ -25,8 +25,8 @@ var gameState = {
   //player,
   apparitionTime : 10,
   speed : -300,
-  apparitionTimeLow : 25,//-10*350/this.speed,
-  apparitionTimeHigh : 100,//3.5*this.apparitionTimeLow,
+  apparitionTimeLow : 15,//-10*350/this.speed,
+  apparitionTimeHigh : 50,//3.5*this.apparitionTimeLow,
   score : 0,
   //scoreText,
   //arrowType,
@@ -86,9 +86,7 @@ var gameState = {
       }
 
       var arrow = this.arrows.create(750, 300, arrowType);
-      arrow.body.velocity.x = this.speed;
-      arrow.events.onOutOfBounds.add(this.goodbye, this);
-      arrow.checkWorldBounds = true;
+      arrow.body.velocity.x = this.speed + Math.random() * 50;
       this.apparitionTime = Math.floor(this.apparitionTimeLow + Math.random()*(this.apparitionTimeHigh - this.apparitionTimeLow));
     }
     
@@ -126,13 +124,8 @@ var gameState = {
         scoreText.text = "Score : " + this.score;
       }
     }
-
-  },
-
-
-  goodbye: function(obj) {
-     obj.kill();
   }
+  
 }
 
 
