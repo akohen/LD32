@@ -19,19 +19,13 @@ var menuState = {
 }
 
 var gameState = {
-  //key,
-  cooldown : 0,
-  //arrows,
-  //player,
-  apparitionTime : 10,
-  speed : -300,
-  apparitionTimeLow : 15,//-10*350/this.speed,
-  apparitionTimeHigh : 50,//3.5*this.apparitionTimeLow,
-  score : 0,
-  //scoreText,
-  //arrowType,
-  //arrowChoice,
 
+  levels : {
+    level1 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 0, duration : 2, next : 'level2'},
+    level2 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 30, duration : 4, next : 'level3'},
+    level3 :    { speed : 400, speedVar : 50, spawnTime : 10, spawnTimeVar : 30, duration : 8, next : 'level1'},
+    punition :  { speed : 100, speedVar : 0, spawnTime : 100, spawnTimeVar : 0, duration : 2, next : 'punition'},
+  },
 
   preload: function () {
     game.load.image('arrow', 'assets/arrow_up2.png');
@@ -40,14 +34,40 @@ var gameState = {
     game.load.image('arrowRight', 'assets/arrow_right2.png');
     game.load.image('arrowLeft', 'assets/arrow_left2.png');
     game.load.image('curseur', 'assets/curseur.png');
+    game.load.audio('pickup', 'assets/pickup.wav');
+  },
+
+  loadLevel: function(name) {
+    console.log('Loading level ' + name);
+    if( name != 'punition' ) {
+      currentLevel = name;
+    }
+    score = 0;
+    spawnTimer = 0;
+    cooldown = 0;
+    level = this.levels[name];
+    arrows.removeAll();
+  },
+
+  loadNextLevel: function() {
+    result = score / level.duration;
+    if( result < 0.5 ) { // Lose
+      game.state.start('menu');
+    } else if( result > 0.80 && level.next != 'punition') { // Punition
+      this.loadLevel('punition');
+    } else if( level.next == 'end' ) { // Win
+      game.state.start('menu');
+    } else {
+      this.loadLevel(this.levels[currentLevel].next);
+    } 
   },
 
 
   create: function () {
-    this.arrows = game.add.group();
-    this.arrows.physicsEnabled = true
-    this.arrows.enableBody = true;
-    this.arrows.physicsBodyType = Phaser.Physics.ARCADE;
+    arrows = game.add.group();
+    arrows.physicsEnabled = true
+    arrows.enableBody = true;
+    arrows.physicsBodyType = Phaser.Physics.ARCADE;
 
     player = game.add.sprite(100,275, 'curseur');
     game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -56,9 +76,13 @@ var gameState = {
     player.body.width = 1;
     player.body.height = 60;
 
-    scoreText = game.add.text(10, 10, 'Score : ' + this.score,  { font: "32px Arial", fill: '#ffffff'});
+    arrowCount = game.add.text(700, 10, 'Arrows : ' + arrows.length,  { font: "32px Arial", fill: '#ffffff'});
 
     this.cursors = game.input.keyboard.createCursorKeys();
+
+    pickupSound = game.add.audio('pickup');
+
+    this.loadLevel('level1');
   },
 
 
@@ -66,37 +90,44 @@ var gameState = {
     this.updateCursor();
     this.spawnArrow();
     
-    game.physics.arcade.overlap(player, this.arrows, this.collisionHandler, null, this);
+    game.physics.arcade.overlap(player, arrows, this.collisionHandler, null, this);
   },
 
 
   spawnArrow: function() {
-    if (this.apparitionTime == 0) {
-      arrowChoice = Math.floor( Math.random()*3.999);
-      if (arrowChoice == 0){
-        arrowType = 'arrowUp';
-      } else if (arrowChoice == 1 ) {
-        arrowType = 'arrowDown';
-      } else if (arrowChoice == 2 ){
-        arrowType = 'arrowRight';
-      } else if (arrowChoice == 3 ){
-        arrowType = 'arrowLeft';
-      } else {
-        arrowType = 'arrow';
-      }
+    if( arrows.length < level.duration ) {
+      state = 'playing';
+      if (spawnTimer == 0) {
+        arrowChoice = Math.floor( Math.random()*3.999);
+        if (arrowChoice == 0){
+          arrowType = 'arrowUp';
+        } else if (arrowChoice == 1 ) {
+          arrowType = 'arrowDown';
+        } else if (arrowChoice == 2 ){
+          arrowType = 'arrowRight';
+        } else if (arrowChoice == 3 ){
+          arrowType = 'arrowLeft';
+        } else {
+          arrowType = 'arrow';
+        }
 
-      var arrow = this.arrows.create(750, 300, arrowType);
-      arrow.body.velocity.x = this.speed + Math.random() * 50;
-      this.apparitionTime = Math.floor(this.apparitionTimeLow + Math.random()*(this.apparitionTimeHigh - this.apparitionTimeLow));
+        var arrow = arrows.create(750, 300, arrowType);
+        arrow.body.velocity.x = - level.speed + Math.random() * level.speedVar;
+        spawnTimer = Math.floor(level.spawnTime + Math.random()*level.spawnTimeVar);
+      }
+      arrowCount.text = arrows.length;
+      spawnTimer--;
+    } else {
+      if( arrows.getBounds().x + arrows.getBounds().width <= 0 ) {
+        this.loadNextLevel();
+      }
     }
     
-    this.apparitionTime-- ;
   },
-
 
   updateCursor: function() {
     key = '';
-    if( this.cooldown == 0 ) {
+    if( cooldown == 0 ) {
       if (this.cursors.up.isDown) {
         key = 'Up';
       } else if (this.cursors.down.isDown) {
@@ -107,11 +138,10 @@ var gameState = {
         key = 'Right';
       }
       if( key != '' ) {
-        console.log(key);
-        this.cooldown = 10;
+        cooldown = 10;
       }
     } else {
-      this.cooldown--;
+      cooldown--;
     }
   },
 
@@ -120,8 +150,9 @@ var gameState = {
     if( key != '' ) {
       if( 'arrow'+key == arrow.key) {
         arrow.kill();
-        this.score += 1;
-        scoreText.text = "Score : " + this.score;
+        score += 1;
+        pickupSound.play();
+        console.log("Score : " + score);
       }
     }
   }

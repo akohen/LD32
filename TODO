@@ -1,4 +1,4 @@
 * Fin du jeu
 * Début du jeu
-* Changement de difficulté / niveau
+* Changement de difficulté / niveau (50 - 75% => next level, sinon game over, à chaque niveau augmente la vitesse/variation)
 * Fond
