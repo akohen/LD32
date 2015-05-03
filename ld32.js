@@ -26,6 +26,10 @@ var menuState = {
     game.load.audio('soundPunition', 'assets/soundPunition.mp3');
     game.load.audio('soundScience', 'assets/soundScience.mp3');
     game.load.audio('soundSport', 'assets/soundSport.mp3');
+
+    this.game.scale.pageAlignHorizontally = true;
+    this.game.scale.pageAlignVertically = true;
+    this.game.scale.refresh();
   },
 
 
@@ -259,7 +263,7 @@ var gameState = {
 }
 
 
-var game = new Phaser.Game(800, 600);
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 game.state.add('game', gameState);
 game.state.add('gameOver', gameOverState);
 game.state.add('win', winState);
