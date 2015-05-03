@@ -99,8 +99,8 @@ var gameState = {
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.anchor.x = 0.5;
     player.anchor.y = 0.5;
-    player.body.width = 5;
-    player.body.height = 120;
+    player.body.width = 10;
+    player.body.height = 128;
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -121,7 +121,7 @@ var gameState = {
   loadLevel: function(name) {
     console.log('Loading level ' + name);
     if( name != 'punition' ) {
-      currentLevel = name;
+      lastLevel = levels[name];
     }
     score = 0;
     spawnTimer = 0;
@@ -138,7 +138,9 @@ var gameState = {
 
   displayResult: function() {
     result = score / level.duration;
-    if( result >= 0.9) {
+    if( result == 1 ) {
+      grade = 'S';
+    } else if( result >= 0.9) {
       grade = 'A';
     } else if( result >= 0.8 ) {
       grade = 'B';
@@ -180,10 +182,10 @@ var gameState = {
       }
     } else if( result >= 0.80 && level.next != 'punition') { // Punition
       this.loadLevel('punition');
-    } else if( level.next == 'win' ) { // Win
+    } else if( lastLevel.next == 'win' ) { // Win
       game.state.start('win');
     } else {
-      this.loadLevel(levels[currentLevel].next);
+      this.loadLevel(lastLevel.next);
     } 
   },
 
