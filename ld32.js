@@ -6,12 +6,12 @@ var menuState = {
 
   create: function () {
     game.add.sprite(0,0, 'background');
-    this.cursors = game.input.keyboard.createCursorKeys();
+    cursors = game.input.keyboard.createCursorKeys();
   },
 
 
   update: function() {
-    if (this.cursors.up.isDown) {
+    if (cursors.up.isDown) {
         game.state.start('game');
       } 
   },
@@ -25,10 +25,10 @@ var gameOverState = {
   },
   create: function () {
     game.add.sprite(0,0, 'background');
-    this.cursors = game.input.keyboard.createCursorKeys();
+    cursors = game.input.keyboard.createCursorKeys();
   },
   update: function() {
-    if (this.cursors.up.isDown) {
+    if (cursors.up.isDown) {
         game.state.start('menu');
       } 
   },
@@ -38,10 +38,10 @@ var gameOverState = {
 var gameState = {
 
   levels : {
-    level1 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 0, duration : 2, next : 'level2'},
-    level2 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 30, duration : 4, next : 'level3'},
-    level3 :    { speed : 400, speedVar : 50, spawnTime : 10, spawnTimeVar : 30, duration : 8, next : 'level1'},
-    punition :  { speed : 100, speedVar : 0, spawnTime : 100, spawnTimeVar : 0, duration : 2, next : 'punition'},
+    level1 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 0, duration : 2, background : 'screenGeography', next : 'level2'},
+    level2 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 30, duration : 4, background : 'screenLanguage', next : 'level3'},
+    level3 :    { speed : 400, speedVar : 50, spawnTime : 10, spawnTimeVar : 30, duration : 8, background : 'screenScience', next : 'level1'},
+    punition :  { speed : 100, speedVar : 0, spawnTime : 100, spawnTimeVar : 0, duration : 2, background : 'screenLevel', next : 'punition'},
   },
 
   preload: function () {
@@ -50,9 +50,12 @@ var gameState = {
     game.load.image('arrowDown', 'assets/arrow_down2.png');
     game.load.image('arrowRight', 'assets/arrow_right2.png');
     game.load.image('arrowLeft', 'assets/arrow_left2.png');
-    game.load.image('curseur', 'assets/curseur.png');
+    game.load.image('curseur', 'assets/pen.png');
     game.load.audio('pickup', 'assets/pickup.wav');
-    game.load.image('background', 'assets/screenLevel.png');
+    game.load.image('screenLevel', 'assets/screenLevel.png');
+    game.load.image('screenGeography', 'assets/screenGeography.png');
+    game.load.image('screenLanguage', 'assets/screenLanguage.png');
+    game.load.image('screenScience', 'assets/screenScience.png');
   },
 
   loadLevel: function(name) {
@@ -66,7 +69,9 @@ var gameState = {
     level = this.levels[name];
     arrows.removeAll();
     state = 'playing';
-    resultDisplay.destroy();
+    resultDisplay.kill();
+    player.revive();
+    background.loadTexture(level.background);
   },
 
   displayResult: function() {
@@ -85,7 +90,9 @@ var gameState = {
       } else {
         grade = 'E';
       }
-      resultDisplay = game.add.text(320, 200, 'Résultat : ' + grade,  { font: "40px Arial", fill: '#ff5555'});
+      player.kill();
+      resultDisplay.text = 'Résultat ' + grade;
+      resultDisplay.revive();
       game.time.events.add(Phaser.Timer.SECOND * 2, this.loadNextLevel, this);
     }
 
@@ -103,7 +110,10 @@ var gameState = {
 
 
   create: function () {
-    game.add.sprite(0,0, 'background');
+    background = game.add.image(0,0, 'screenLevel');
+    background.loadTexture('screenScience');
+
+    resultDisplay = game.add.text(320, 200, '',  { font: "40px Arial", fill: '#ff5555'});
 
     arrows = game.add.group();
     arrows.physicsEnabled = true
@@ -117,9 +127,7 @@ var gameState = {
     player.body.width = 1;
     player.body.height = 60;
 
-    arrowCount = game.add.text(700, 10, 'Arrows : ' + arrows.length,  { font: "32px Arial", fill: '#ffffff'});
-
-    this.cursors = game.input.keyboard.createCursorKeys();
+    cursors = game.input.keyboard.createCursorKeys();
 
     pickupSound = game.add.audio('pickup');
 
@@ -156,7 +164,6 @@ var gameState = {
         arrow.body.velocity.x = - level.speed + Math.random() * level.speedVar;
         spawnTimer = Math.floor(level.spawnTime + Math.random()*level.spawnTimeVar);
       }
-      arrowCount.text = arrows.length;
       spawnTimer--;
     } else if( arrows.getBounds().x + arrows.getBounds().width <= 0 && state == 'playing') {
       state = 'ending';
@@ -167,13 +174,13 @@ var gameState = {
   updateCursor: function() {
     key = '';
     if( cooldown == 0 ) {
-      if (this.cursors.up.isDown) {
+      if (cursors.up.isDown) {
         key = 'Up';
-      } else if (this.cursors.down.isDown) {
+      } else if (cursors.down.isDown) {
         key = 'Down';
-      } else if (this.cursors.left.isDown) {
+      } else if (cursors.left.isDown) {
         key = 'Left';
-      } else if (this.cursors.right.isDown) {
+      } else if (cursors.right.isDown) {
         key = 'Right';
       }
       if( key != '' ) {
