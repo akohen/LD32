@@ -29,14 +29,17 @@ var menuState = {
 
   create: function () {
     game.add.sprite(0,0, 'background');
+
+    game.add.text(50, 300, 'P The Sloth has to take his exams.\nHe must pass every class while working as little as possible.\nMoreover, if his grades are too good, he\'ll have to sit in a student council session.\nSo tiring!', 
+     { font: "20px Arial", fill: '#000000'});
+
+    game.add.text(250, 450, 'Press any key to start', 
+     { font: "italic 26px Arial", fill: '#000000'});
     cursors = game.input.keyboard.createCursorKeys();
-  },
-
-
-  update: function() {
-    if (cursors.up.isDown) {
-        game.state.start('game');
-      } 
+    game.input.keyboard.onDownCallback = function(e) {
+      game.state.start('game');
+      game.input.keyboard.onDownCallback = null;
+    }
   },
 
 }
@@ -66,16 +69,16 @@ var winState = {
   create: function () {
     game.add.sprite(0,0, 'background');
     cursors = game.input.keyboard.createCursorKeys();
-    game.add.text(180, 330, 'Geography : ',  { font: "40px Arial", fill: '#ffffff'});
+    game.add.text(180, 330, 'Geography',  { font: "40px Arial", fill: '#ffffff'});
     game.add.text(400, 330, levels['geography'].grade,  { font: "40px Arial", fill: '#ffffff'});
 
-    game.add.text(180, 370, 'Language : ',  { font: "40px Arial", fill: '#ffffff'});
+    game.add.text(180, 370, 'Language',  { font: "40px Arial", fill: '#ffffff'});
     game.add.text(400, 370, levels['language'].grade,  { font: "40px Arial", fill: '#ffffff'});
 
-    game.add.text(180, 410, 'Science : ',  { font: "40px Arial", fill: '#ffffff'});
+    game.add.text(180, 410, 'Science',  { font: "40px Arial", fill: '#ffffff'});
     game.add.text(400, 410, levels['science'].grade,  { font: "40px Arial", fill: '#ffffff'});
 
-    game.add.text(180, 450, 'Sport : ',  { font: "40px Arial", fill: '#ffffff'});
+    game.add.text(180, 450, 'Sport',  { font: "40px Arial", fill: '#ffffff'});
     game.add.text(400, 450, levels['sport'].grade,  { font: "40px Arial", fill: '#ffffff'});
   },
   update: function() {
