@@ -91,6 +91,7 @@ var gameState = {
         grade = 'E';
       }
       player.kill();
+      background.loadTexture('screenLevel');
       resultDisplay.text = 'Résultat ' + grade;
       resultDisplay.revive();
       game.time.events.add(Phaser.Timer.SECOND * 2, this.loadNextLevel, this);
@@ -113,19 +114,19 @@ var gameState = {
     background = game.add.image(0,0, 'screenLevel');
     background.loadTexture('screenScience');
 
-    resultDisplay = game.add.text(320, 200, '',  { font: "40px Arial", fill: '#ff5555'});
+    resultDisplay = game.add.text(320, 300, '',  { font: "40px Arial", fill: '#ff2222'});
 
     arrows = game.add.group();
     arrows.physicsEnabled = true
     arrows.enableBody = true;
     arrows.physicsBodyType = Phaser.Physics.ARCADE;
 
-    player = game.add.sprite(100,275, 'curseur');
+    player = game.add.sprite(100,250, 'curseur');
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.anchor.x = 0.5;
     player.anchor.y = 0.5;
-    player.body.width = 1;
-    player.body.height = 60;
+    player.body.width = 2;
+    player.body.height = 120;
 
     cursors = game.input.keyboard.createCursorKeys();
 
