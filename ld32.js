@@ -52,6 +52,7 @@ var gameState = {
     game.load.image('arrowLeft', 'assets/arrow_left2.png');
     game.load.image('curseur', 'assets/curseur.png');
     game.load.audio('pickup', 'assets/pickup.wav');
+    game.load.image('background', 'assets/screenLevel.png');
   },
 
   loadLevel: function(name) {
@@ -64,13 +65,34 @@ var gameState = {
     cooldown = 0;
     level = this.levels[name];
     arrows.removeAll();
+    state = 'playing';
+    resultDisplay.destroy();
   },
 
-  loadNextLevel: function() {
+  displayResult: function() {
     result = score / level.duration;
     if( result < 0.5 ) { // Lose
       game.state.start('gameOver');
-    } else if( result > 0.80 && level.next != 'punition') { // Punition
+    } else { // Show results
+      if( result >= 0.9) {
+        grade = 'A';
+      } else if( result >= 0.8 ) {
+        grade = 'B';
+      } else if( result >= 0.7 ) {
+        grade = 'C';
+      } else if( result >= 0.6 ) {
+        grade = 'D';
+      } else {
+        grade = 'E';
+      }
+      resultDisplay = game.add.text(320, 200, 'Résultat : ' + grade,  { font: "40px Arial", fill: '#ff5555'});
+      game.time.events.add(Phaser.Timer.SECOND * 2, this.loadNextLevel, this);
+    }
+
+  },
+
+  loadNextLevel: function() {
+    if( result >= 0.80 && level.next != 'punition') { // Punition
       this.loadLevel('punition');
     } else if( level.next == 'end' ) { // Win
       game.state.start('menu');
@@ -81,6 +103,8 @@ var gameState = {
 
 
   create: function () {
+    game.add.sprite(0,0, 'background');
+
     arrows = game.add.group();
     arrows.physicsEnabled = true
     arrows.enableBody = true;
@@ -113,7 +137,7 @@ var gameState = {
 
   spawnArrow: function() {
     if( arrows.length < level.duration ) {
-      state = 'playing';
+      
       if (spawnTimer == 0) {
         arrowChoice = Math.floor( Math.random()*3.999);
         if (arrowChoice == 0){
@@ -134,10 +158,9 @@ var gameState = {
       }
       arrowCount.text = arrows.length;
       spawnTimer--;
-    } else {
-      if( arrows.getBounds().x + arrows.getBounds().width <= 0 ) {
-        this.loadNextLevel();
-      }
+    } else if( arrows.getBounds().x + arrows.getBounds().width <= 0 && state == 'playing') {
+      state = 'ending';
+      this.displayResult();
     }
   },
 
