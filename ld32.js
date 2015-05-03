@@ -37,13 +37,6 @@ var gameOverState = {
 
 var gameState = {
 
-  levels : {
-    level1 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 0, duration : 2, background : 'screenGeography', next : 'level2'},
-    level2 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 30, duration : 4, background : 'screenLanguage', next : 'level3'},
-    level3 :    { speed : 400, speedVar : 50, spawnTime : 10, spawnTimeVar : 30, duration : 8, background : 'screenScience', next : 'level1'},
-    punition :  { speed : 100, speedVar : 0, spawnTime : 100, spawnTimeVar : 0, duration : 2, background : 'screenLevel', next : 'punition'},
-  },
-
   preload: function () {
     game.load.image('arrow', 'assets/arrow_up2.png');
     game.load.image('arrowUp', 'assets/arrow_up2.png');
@@ -51,11 +44,21 @@ var gameState = {
     game.load.image('arrowRight', 'assets/arrow_right2.png');
     game.load.image('arrowLeft', 'assets/arrow_left2.png');
     game.load.image('curseur', 'assets/pen.png');
-    game.load.audio('pickup', 'assets/pickup.wav');
-    game.load.image('screenLevel', 'assets/screenLevel.png');
+    game.load.image('screenResult', 'assets/screenLevel.png');
     game.load.image('screenGeography', 'assets/screenGeography.png');
     game.load.image('screenLanguage', 'assets/screenLanguage.png');
     game.load.image('screenScience', 'assets/screenScience.png');
+    game.load.image('screenSport', 'assets/screenSport.png');
+    game.load.image('screenPunition', 'assets/screenPunition.png');
+
+
+    game.load.audio('pickup', 'assets/pickup.wav');
+    game.load.audio('soundNote', 'assets/soundNote.mp3');
+
+    game.load.audio('soundGeography', 'assets/soundGeography.mp3');
+    game.load.audio('soundLanguage', 'assets/soundLanguage.mp3');
+    game.load.audio('soundPunition', 'assets/soundPunition.mp3');
+    game.load.audio('soundScience', 'assets/soundScience.mp3');
   },
 
   loadLevel: function(name) {
@@ -66,16 +69,18 @@ var gameState = {
     score = 0;
     spawnTimer = 0;
     cooldown = 0;
-    level = this.levels[name];
+    level = levels[name];
     arrows.removeAll();
     state = 'playing';
     resultDisplay.kill();
     player.revive();
     background.loadTexture(level.background);
+    level.music.play();
   },
 
   displayResult: function() {
     result = score / level.duration;
+    level.music.stop();
     if( result < 0.5 ) { // Lose
       game.state.start('gameOver');
     } else { // Show results
@@ -91,12 +96,18 @@ var gameState = {
         grade = 'E';
       }
       player.kill();
-      background.loadTexture('screenLevel');
-      resultDisplay.text = 'Résultat ' + grade;
+      background.loadTexture('screenResult');
+      resultDisplay.text = 'Résultat ';
       resultDisplay.revive();
-      game.time.events.add(Phaser.Timer.SECOND * 2, this.loadNextLevel, this);
+      resultSound.play();
+      game.time.events.add(Phaser.Timer.SECOND * 3, this.showGrade, this);
+      game.time.events.add(Phaser.Timer.SECOND * 4.5, this.loadNextLevel, this);
     }
 
+  },
+
+  showGrade: function() {
+    resultDisplay.text = 'Résultat ' + grade;
   },
 
   loadNextLevel: function() {
@@ -105,13 +116,13 @@ var gameState = {
     } else if( level.next == 'end' ) { // Win
       game.state.start('menu');
     } else {
-      this.loadLevel(this.levels[currentLevel].next);
+      this.loadLevel(levels[currentLevel].next);
     } 
   },
 
 
   create: function () {
-    background = game.add.image(0,0, 'screenLevel');
+    background = game.add.image(0,0, 'screenResult');
     background.loadTexture('screenScience');
 
     resultDisplay = game.add.text(320, 300, '',  { font: "40px Arial", fill: '#ff2222'});
@@ -131,6 +142,15 @@ var gameState = {
     cursors = game.input.keyboard.createCursorKeys();
 
     pickupSound = game.add.audio('pickup');
+    resultSound = game.add.audio('soundNote');
+
+    levels = {
+      level1 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 0, duration : 2,   background : 'screenGeography', music : game.add.audio('soundGeography'), next : 'level2'},
+      level2 :    { speed : 200, speedVar : 50, spawnTime : 50, spawnTimeVar : 30, duration : 4,  background : 'screenLanguage',  music : game.add.audio('soundLanguage'), next : 'level3'},
+      level3 :    { speed : 400, speedVar : 50, spawnTime : 10, spawnTimeVar : 30, duration : 8,  background : 'screenScience',   music : game.add.audio('soundScience'), next : 'level4'},
+      level4 :    { speed : 400, speedVar : 50, spawnTime : 10, spawnTimeVar : 30, duration : 8,  background : 'screenSport',     music : game.add.audio('soundScience'), next : 'level1'},
+      punition :  { speed : 100, speedVar : 0, spawnTime : 100, spawnTimeVar : 0, duration : 2,   background : 'screenPunition',  music : game.add.audio('soundPunition'), next : 'punition'},
+    };
 
     this.loadLevel('level1');
   },
