@@ -1,11 +1,11 @@
 var menuState = {
   preload: function () {
-    game.load.image('arrow', 'assets/arrow_up2.png');
+    game.load.image('background', 'assets/screenLevel.png');
   },
 
 
   create: function () {
-    game.add.sprite(100,275, 'arrow');
+    game.add.sprite(0,0, 'background');
     this.cursors = game.input.keyboard.createCursorKeys();
   },
 
@@ -13,6 +13,23 @@ var menuState = {
   update: function() {
     if (this.cursors.up.isDown) {
         game.state.start('game');
+      } 
+  },
+
+}
+
+
+var gameOverState = {
+  preload: function () {
+    game.load.image('background', 'assets/screenGameOver.png');
+  },
+  create: function () {
+    game.add.sprite(0,0, 'background');
+    this.cursors = game.input.keyboard.createCursorKeys();
+  },
+  update: function() {
+    if (this.cursors.up.isDown) {
+        game.state.start('menu');
       } 
   },
 
@@ -52,7 +69,7 @@ var gameState = {
   loadNextLevel: function() {
     result = score / level.duration;
     if( result < 0.5 ) { // Lose
-      game.state.start('menu');
+      game.state.start('gameOver');
     } else if( result > 0.80 && level.next != 'punition') { // Punition
       this.loadLevel('punition');
     } else if( level.next == 'end' ) { // Win
@@ -122,7 +139,6 @@ var gameState = {
         this.loadNextLevel();
       }
     }
-    
   },
 
   updateCursor: function() {
@@ -162,4 +178,5 @@ var gameState = {
 
 var game = new Phaser.Game(800, 600);
 game.state.add('game', gameState);
+game.state.add('gameOver', gameOverState);
 game.state.add('menu', menuState, true);
